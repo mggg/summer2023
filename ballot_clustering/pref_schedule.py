@@ -18,7 +18,7 @@ from compute_winners import rcv_run
 from distinctipy import get_colors
 from vote_transfers import cincinnati_transfer
 
-class pref_schedule:
+class prefSchedule:
         
     def __init__(self,num_cands,ballot_dict):
         self.ballot_dict = ballot_dict
@@ -76,14 +76,14 @@ class pref_schedule:
 
         else:
             # make the adjacency graph of size (n - 1)
-            G_prev = pref_schedule.build_graph(n-1)
+            G_prev = prefSchedule.build_graph(n-1)
            
             for i in range(1,n+1):
                 # add the node for the bullet vote i
                 Gc.add_node(tuple([i]))
 
                 # make the subgraph for the ballots where i is ranked first
-                G_corner = pref_schedule.relabel(G_prev,i,n)
+                G_corner = prefSchedule.relabel(G_prev,i,n)
       
                 # add the components from that graph to the larger graph
                 Gc.add_nodes_from(G_corner.nodes)
@@ -141,7 +141,7 @@ class pref_schedule:
         Generates a cost matrix representing the shortest distance between each pair of nodes
         in the ballot graph. Used to calculate earth-mover distances
         """
-        graph = pref_schedule.build_graph(self.num_cands)
+        graph = prefSchedule.build_graph(self.num_cands)
         # Floyd Warshall Shortest Distance alorithm. Returns a dictionary of shortest path for each node
         FW_dist_dict = nx.floyd_warshall(graph)
         keysList = list(FW_dist_dict.keys())
@@ -152,6 +152,26 @@ class pref_schedule:
             cost_col = [value for key, value in sorted(node_dict.items())]
             cost_matrix[i] = cost_col
         return cost_matrix
+    
+    @staticmethod
+    def generate_interval_cost_matrix(self, pref_interval):
+        """
+        Generates a cost matrix representing the shortest distance between each pair of nodes
+        in the ballot graph. Used to calculate earth-mover distances
+        """
+        graph = prefSchedule.build_graph(self.num_cands)
+        # Floyd Warshall Shortest Distance alorithm. Returns a dictionary of shortest path for each node
+        FW_dist_dict = nx.floyd_warshall(graph)
+        keysList = list(FW_dist_dict.keys())
+        keysList.sort()
+        cost_matrix = np.zeros((len(keysList), len(keysList)))
+        for i in range(len(keysList)):
+            node_dict = FW_dist_dict[keysList[i]]
+            cost_col = [value for key, value in sorted(node_dict.items())]
+            cost_matrix[i] = cost_col
+        return cost_matrix
+    
+
         
     def rcv_results(self, num_seats, transfer_method, verbose_bool = False): 
         ballot_list = []

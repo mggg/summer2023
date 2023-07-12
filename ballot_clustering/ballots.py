@@ -10,7 +10,7 @@ import numpy as np
 This class generates balllots for PL and BT ballot types 
 '''
 
-class BallotGen:∏
+class BallotGen:
 
   def __init__(self,num_ballots, cand_list, voter_proportion_by_race, cand_support_interval):
     self.num_ballots = num_ballots

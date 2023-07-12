@@ -16,7 +16,7 @@ from sklearn.decomposition import PCA
 from pref_schedule import pref_schedule
 
 
-# TODO: test 
+# TODO: test and rename functions in compliance with pref_schedule
 
 '''
 This class compares lists of preference schedules, and makes an MDS plot 
