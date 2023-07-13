@@ -65,6 +65,7 @@ class PyclusteringXMeans:
         centers  = self.xmeans_instance.get_centers()
 
         self.labels_ = self.__clusters_to_labels(clusters)
+        return self
 
     def __clusters_to_labels(self, clusters):
         labels = np.array([None]*len(self.data))
