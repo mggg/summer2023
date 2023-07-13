@@ -13,7 +13,7 @@ import time
 from sklearn import manifold
 from sklearn.metrics import euclidean_distances
 from sklearn.decomposition import PCA
-import EM_dists 
+#import EM_dists 
 
 ##the packages below are all from generalRCV
 from compute_winners import rcv_run
