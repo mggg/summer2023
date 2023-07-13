@@ -13,7 +13,7 @@ import time
 from sklearn import manifold
 from sklearn.metrics import euclidean_distances
 from sklearn.decomposition import PCA
-import EM_dists 
+# import EM_dists 
 
 ##the packages below are all from generalRCV
 from compute_winners import rcv_run
@@ -170,7 +170,7 @@ class pref_schedule:
             Gc.add_edges_from(new_edges)
 
         Graphs[n] = Gc
-        return
+        return Gc
 
     @staticmethod
     def relabel(gr, new_label, num_cands):
