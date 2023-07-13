@@ -17,7 +17,7 @@ from sklearn.utils.validation import check_is_fitted
 from pyclustering.cluster.xmeans import xmeans, splitting_type
 from pyclustering.utils import distance_metric, type_metric
 
-class PyclusteringXMeans:
+class PyclusteringXMeans(BaseEstimator, ClusterMixin):
     def __init__(
         self,
         *,
