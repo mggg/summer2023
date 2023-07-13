@@ -64,8 +64,12 @@ class PyclusteringXMeans(BaseEstimator, ClusterMixin):
         clusters = self.xmeans_instance.get_clusters()
         centers  = self.xmeans_instance.get_centers()
 
+        self.cluster_centers_ = centers
         self.labels_ = self.__clusters_to_labels(clusters)
         return self
+
+    def predict(self, X):
+        return self.xmeans_instance.predict(X)
 
     def __clusters_to_labels(self, clusters):
         labels = np.array([None]*len(self.data))
