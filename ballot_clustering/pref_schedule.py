@@ -13,6 +13,8 @@ import time
 from sklearn import manifold
 from sklearn.metrics import euclidean_distances
 from sklearn.decomposition import PCA
+import pickle
+import random
 # import EM_dists 
 
 ##the packages below are all from generalRCV
@@ -216,6 +218,8 @@ class pref_schedule:
     def subgraph_neighborhood(self,center,radius = 2):
         return nx.ego_graph(Graphs[self.num_cands],center,radius)
     
+
+    
     def k_heaviest_neighborhoods(self, k=2, radius=2):
         cast_ballots = set([x for x in self.ballot_dict.keys() if self.ballot_dict[x] > 0]) ##has 
             
@@ -244,6 +248,59 @@ class pref_schedule:
             cast_ballots =  cast_ballots.difference(set(max_ball.nodes))
                 
         return max_balls
+
+    
+
+
+    def k_means(self, k):
+        # TODO: Has bugs.  
+
+        bg = pref_schedule.build_graph(self.num_cands)
+
+        # create the shortest distance matrix using pickle 
+        d = nx.floyd_warshall(bg, weight="edge_weight")
+        with open(f"ballot_graph", 'wb') as f:
+            pickle.dump({v1: {v2: d[v1][v2] for v2 in bg.nodes()} for v1 in bg.nodes()}, f)
+        
+        with open(f"ballot_graph", 'rb') as f:
+            d = pickle.load(f)
+
+        old_centers = {}
+        new_centers = set(random.sample(bg.nodes(), k=k))
+        num_iterations = 0
+        while old_centers != new_centers:
+            old_centers = new_centers
+            new_centers = set()
+            num_iterations += 1
+            #print(num_iterations)
+            
+            # Compute clusters, dividing equally when there are ties.
+            weight_contribution_to_cluster = {center: {} for center in old_centers}
+            for node in bg.nodes(data=True):
+                print(type(center))
+                min_distance = min(d[node][center] for center in old_centers)
+                divide_among = [center for center in old_centers if d[node][center] == min_distance]
+                num_to_divide_among = len(divide_among)
+                for center in divide_among:
+                    weight_contribution_to_cluster[center][node] = \
+                            Fraction(self.ballot_dict[node], num_to_divide_among)
+            
+            # Define new centers.
+            for old_center in old_centers:
+                w = weight_contribution_to_cluster[old_center]
+                sum_of_distances = {node: 0 for node in bg.nodes()}
+                for node in bg.nodes():
+                    for node_in_cluster, weight_contribution in w.items():
+                        sum_of_distances[node] += weight_contribution*d[node][node_in_cluster]
+                sorted_nodes = list(bg.nodes())
+                random.shuffle(sorted_nodes)
+                sorted_nodes = sorted(sorted_nodes, key=lambda node: sum_of_distances[node])
+                i = 0
+                while sorted_nodes[i] in new_centers:
+                    i += 1
+                new_centers.add(sorted_nodes[i])
+        print(f"Convergence after {num_iterations} iterations.")
+        return new_centers
 
    
 
