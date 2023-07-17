@@ -15,6 +15,14 @@ def draw(bg):
 
 
 def ballot_graph(n, k, election=None, remove_k_minus_1=False):
+    """
+    n: number of candidates 
+    k: max ballot length 
+    election: if offered, assign ballot weights based on values in election (dictionary). Otherwise
+    assign all ballot weights as 1. 
+    remove_k_minus_1: if true, exclude ballots of length k - 1 (e.g. if k == n)
+    """
+
     bg = nx.Graph()
     for num_positions_filled in range(1, k + 1):
         if remove_k_minus_1 and num_positions_filled == k - 1:
