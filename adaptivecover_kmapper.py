@@ -41,7 +41,8 @@ class KMapperAdaptiveCover():
             debug = self.debug
         )  
     def fit(self, X):
-        return BIC_Cover_Centroid
+        centers = [(interval[1] - interval[0])/2 for interval in self.adaptivecoverinstance.intervals]
+        return centers
     # need to call interval_centers somehow, interval_centers is generated when computing the bic presplit
     # interval_centers is a list of centers
     # it's used in bic_centroid to compute bic/aic for each iteration
@@ -68,3 +69,5 @@ class KMapperAdaptiveCover():
 # transform returns list of data points in each element of the cover
 # init ac object with everything needed for ac
 # self.ac = instance of ac class, then extract info for fit and transform
+# interval is list of intervals lists with right, left endpoints
+# iterate over intervals, grab all data pts in each interval
