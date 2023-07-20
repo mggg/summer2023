@@ -1,0 +1,3 @@
+[submodule "tda_adaptivecover_shim/mapper_xmean_cover"]
+	path = tda_adaptivecover_shim/mapper_xmean_cover
+	url = git@github.com:tdavislab/mapper-xmean-cover.git
