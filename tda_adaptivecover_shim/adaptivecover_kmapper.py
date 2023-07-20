@@ -39,6 +39,10 @@ class KMapperAdaptiveCover():
             method = self.method,
             debug = self.debug
         )  
+
+        self.n_cubes = len(self.acinstance.intervals)
+        self.perc_overlap = "adaptive"
+        
     def fit(self, X):
         centers = [(interval[1] - interval[0])/2 for interval in self.acinstance.intervals]
         return centers
