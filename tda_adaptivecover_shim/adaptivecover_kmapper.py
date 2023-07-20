@@ -53,7 +53,7 @@ class KMapperAdaptiveCover():
         return intervals
     
     def transform_single(X, data, interval):
-        interval = data[(data >= interval[0]) & (data <= interval[1])]
+        interval = data[(data[:, 1] >= interval[0]) & (data[:, 1] <= interval[1])]
         return interval
 
     def fit_transform(self, X):
