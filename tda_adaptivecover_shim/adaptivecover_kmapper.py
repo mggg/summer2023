@@ -1,8 +1,6 @@
 import numpy as np
-import sys
-sys.path.append('mapper_xmean_cover')
 
-from mapper_xmean_cover.AdaptiveCover import xmeans_adaptive_cover
+from mapper_xmean_cover import xmeans_adaptive_cover
 
 class KMapperAdaptiveCover():
     def __init__(
