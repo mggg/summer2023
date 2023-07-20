@@ -1,6 +1,8 @@
 import numpy as np
+import sys
+sys.path.append('mapper_xmean_cover')
 
-from mapper_xmean_cover.mapper_xmean_cover.AdaptiveCover import xmeans_adaptive_cover
+from mapper_xmean_cover.AdaptiveCover import xmeans_adaptive_cover
 
 class KMapperAdaptiveCover():
     def __init__(
@@ -42,7 +44,7 @@ class KMapperAdaptiveCover():
 
         self.n_cubes = len(self.acinstance.intervals)
         self.perc_overlap = "adaptive"
-        
+
     def fit(self, X):
         centers = [(interval[1] - interval[0])/2 for interval in self.acinstance.intervals]
         return centers
