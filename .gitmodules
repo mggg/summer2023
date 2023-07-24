@@ -1,3 +1,6 @@
 [submodule "tda_adaptivecover_shim/mapper_xmean_cover"]
 	path = tda_adaptivecover_shim/mapper_xmean_cover
 	url = git@github.com:tdavislab/mapper-xmean-cover.git
+[submodule "tda_chicago_general"]
+	path = tda_chicago_general
+	url = git@github.com:hazelnb/Chicago-Mayoral.git
