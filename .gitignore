@@ -6,4 +6,5 @@ htmlcov/
 tda_adaptivecover_shim/build/*
 tda_adaptivecover_shim/mapper_xmean_cover/build/*
 tda_adaptivecover_shim/adaptivecover_kmapper.egg-info
-
+tda_sklearn_pyclustering_shim/build
+tda_sklearn_pyclustering_shim/sklearn_pyclustering_shim.egg-info/*
