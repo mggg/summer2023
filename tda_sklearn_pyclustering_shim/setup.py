@@ -8,7 +8,7 @@ setuptools.setup(
     author_email='hnb29@cornell.edu',
     license='BSD 2-clause',
     packages=setuptools.find_packages(),
-    install_requires=['sklearn',
+    install_requires=['scikit-learn',
                       'pyclustering',
                       'numpy',                     
                       ],
