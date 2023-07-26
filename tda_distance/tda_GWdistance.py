@@ -10,7 +10,7 @@ import itertools
 import traceback
 
 #load in data
-folder_path = "/Users/emariedelanuez/summer2023/tda_distance/outputs"
+folder_path = "/Users/emariedelanuez/summer2023/tda_distance/union_1_2"
 def loadin(path):
     json_files = [file for file in os.listdir(folder_path) if file.endswith(".json")]
     
@@ -111,13 +111,17 @@ def pairwise_comparision(graphs_1, graphs_2):
     return results
  
 
-results = pairwise_comparision(G1, G1)
+resultss = pairwise_comparision(G1, G1)
 
-heatmap= plt.imshow(results, cmap='hot', interpolation='nearest')
-colorbar = plt.colorbar(heatmap)
-colorbar.set_label('Data Values')
-plt.show()
+def generate_heatmap_plot(results, cmap='hot', interpolation='nearest', label='Data Values'):
+    heatmap = plt.imshow(results, cmap=cmap, interpolation=interpolation)
+    colorbar = plt.colorbar(heatmap)
+    colorbar.set_label(label)
+    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/heatmaps/union_1_2.png') 
+    plt.show()
 
+viz= generate_heatmap_plot(results=resultss, cmap='hot', interpolation='nearest', label='Data Values')
+print(viz)
 
 
 
