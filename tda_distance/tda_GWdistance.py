@@ -6,39 +6,41 @@ import ot
 import os 
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib as mpl
 import itertools
 import traceback
 
 #load in data
-folder_path = "/Users/emariedelanuez/summer2023/tda_distance/union_1_2"
+folder_path = "/Users/emariedelanuez/summer2023/tda_distance/toy_tests_dbscan"
 def loadin(path):
     json_files = [file for file in os.listdir(folder_path) if file.endswith(".json")]
-    
-    obj_1= []
+    result = json_files.sort()
+    graphs = []
     for file in json_files:
         file_path = os.path.join(folder_path, file)
         try:
             with open(file_path, "r") as f:
                 json_data = json.load(f)
-                obj_1.append(json_data)
+                G = json_graph.adjacency_graph(json_data["graph"])
+                G.graph["name"] = file_path.split("/")[-1]
+                graphs.append(G)
+                
         except FileNotFoundError:
             print(f"JSON file '{file}' not found in the folder.")
         except json.JSONDecodeError as e:
             print(f"Error while decoding JSON in file '{file}': {e}")
         except IOError as e:
             print(f"Error while reading the file '{file}': {e}")
-
-    graphs_1 = [json_graph.adjacency_graph(file["graph"]) for file in obj_1]
     
+
     """""
     might not be the most well executed and should get touched up 
     if you want to compare two completely different families of graphs 
     
     """
-    # obj_2 = obj_1.copy()
-    # graphs_2 = [json_graph.adjacency_graph(file["graph"]) for file in obj_2]
-    return obj_1, graphs_1 #, obj_2, graphs_2
-o1, G1 = loadin(folder_path)
+    return graphs #, obj_2, graphs_2
+G1 = loadin(folder_path)
 
 
 
@@ -113,17 +115,52 @@ def pairwise_comparision(graphs_1, graphs_2):
 
 resultss = pairwise_comparision(G1, G1)
 
-def generate_heatmap_plot(results, cmap='hot', interpolation='nearest', label='Data Values'):
-    heatmap = plt.imshow(results, cmap=cmap, interpolation=interpolation)
+def generate_heatmap_plot(resultss, graphs, cmap='hot', interpolation='nearest', label='Data Values'):
+    names_1 = []
+    for i in graphs:
+        names_1.append(i.graph["name"].replace("_","").strip("toy.json"))
+    print(names_1)
+
+    fig, ax = plt.subplots()  
+
+    # Show all ticks and label them with the respective list entries
+    ax.set_xticks(np.arange(len(resultss)), labels=names_1)
+    ax.set_yticks(np.arange(len(resultss)), labels=names_1)
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=60, ha="right",
+             rotation_mode="anchor")
+
+    heatmap = ax.imshow(resultss, cmap=cmap, interpolation=interpolation) 
     colorbar = plt.colorbar(heatmap)
     colorbar.set_label(label)
-    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/heatmaps/union_1_2.png') 
+    ax.set_title("toy dbscan")
+    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/heatmaps/toytests_dbscan.png')
     plt.show()
+    return fig
 
-viz= generate_heatmap_plot(results=resultss, cmap='hot', interpolation='nearest', label='Data Values')
+viz= generate_heatmap_plot(resultss=resultss, graphs = G1, cmap='hot', interpolation='nearest', label='Data Values')
 print(viz)
+""""
 
 
+
+im = ax.imshow(resultss)
+
+
+
+# Loop over data dimensions and create text annotations.
+for i in range(len(G1)):
+    for j in range(len(G1)):
+        text = ax.text(j, i, G1[i, j],
+                       ha="center", va="center", color="w")
+        
+
+
+ax.set_title("whatever")
+fig.tight_layout()
+plt.show()
+
+"""
 
 """
 
