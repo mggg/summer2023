@@ -1,3 +1,4 @@
+from matplotlib import axes
 import networkx as nx
 from networkx.readwrite import json_graph
 import json
@@ -12,7 +13,7 @@ import itertools
 import traceback
 
 #load in data
-folder_path = "/Users/emariedelanuez/summer2023/tda_distance/toy_tests_dbscan"
+folder_path = "/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2019_runoff_vers2/data/elimination_19_ro_2"
 def loadin(path):
     json_files = [file for file in os.listdir(folder_path) if file.endswith(".json")]
     result = json_files.sort()
@@ -117,75 +118,40 @@ resultss = pairwise_comparision(G1, G1)
 
 def generate_heatmap_plot(resultss, graphs, cmap='hot', interpolation='nearest', label='Data Values'):
     names_1 = []
+
+    phrases_to_remove = ["_", ".json","chicago"]
     for i in graphs:
-        names_1.append(i.graph["name"].replace("_","").strip("toy.json"))
-    print(names_1)
-
+        modified_name = i.graph["name"]
+        for phrase in phrases_to_remove:
+            modified_name = modified_name.replace(phrase, "")
+        names_1.append(modified_name)
+    
     fig, ax = plt.subplots()  
-
     # Show all ticks and label them with the respective list entries
     ax.set_xticks(np.arange(len(resultss)), labels=names_1)
     ax.set_yticks(np.arange(len(resultss)), labels=names_1)
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=60, ha="right",
              rotation_mode="anchor")
+    
+    for label in ax.get_xticklabels():
+        label.set_fontsize(9) 
 
     heatmap = ax.imshow(resultss, cmap=cmap, interpolation=interpolation) 
+
+   # for i in range(len(resultss)):
+    #     for j in range(len(resultss[i])):
+     #          ax.text(j, i, f"{resultss[i, j]:.0002f}", ha="center", va="center", color="green", fontsize=3)
+
     colorbar = plt.colorbar(heatmap)
     colorbar.set_label(label)
-    ax.set_title("toy dbscan")
-    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/heatmaps/toytests_dbscan.png')
+
+    colorbar = plt.colorbar(heatmap)
+    colorbar.set_label('')
+    ax.set_title("2019 run off (Version 2)")
+    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2019_runoff_vers2/heatmap/2019_runoff_vers2.png')
     plt.show()
     return fig
 
 viz= generate_heatmap_plot(resultss=resultss, graphs = G1, cmap='hot', interpolation='nearest', label='Data Values')
 print(viz)
-""""
-
-
-
-im = ax.imshow(resultss)
-
-
-
-# Loop over data dimensions and create text annotations.
-for i in range(len(G1)):
-    for j in range(len(G1)):
-        text = ax.text(j, i, G1[i, j],
-                       ha="center", va="center", color="w")
-        
-
-
-ax.set_title("whatever")
-fig.tight_layout()
-plt.show()
-
-"""
-
-"""
-
-
-# Assuming g1 and g2 are lists of graphs obtained from loadin()
-
-def pairwise_comparision(graphs_1, graphs_2):
-    decorated_1 = [ decorate_graph(graph) for graph in graphs_1 ]
-    decorated_2 = [ decorate_graph(graph) for graph in graphs_2 ]
-    
-    for graph_i in decorated_1:
-        for node, data in graph_i.nodes(data=True):
-            for attr_name, attr_value in data.items():
-                if attr_value == 0:
-                    print(f"Node {node} in graph_i has attribute '{attr_name}' with a value of zero.")
-    return decorated_1, decorated_2
-
-check = pairwise_comparision(G1, G2)
-print(check)
-  
-
-#
-#obj_1 = json.load(open("/Users/emariedelanuez/kepler-mapper/output for implementation/chicago_vapandsalary_jordans_version.json"))
-#G1 = json_graph.adjacency_graph(obj_1["graph"])
-#obj_2 = json.load(open("/Users/emariedelanuez/kepler-mapper/output for implementation/chicago_justwvapsalary.json"))
-#G2 = json_graph.adjacency_graph(obj_2["graph"])
-
-"""
