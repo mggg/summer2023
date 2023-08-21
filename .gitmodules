@@ -4,3 +4,6 @@
 [submodule "tda_chicago_general"]
 	path = tda_chicago_general
 	url = git@github.com:hazelnb/Chicago-Mayoral.git
+[submodule "autocomplete-model"]
+	path = autocomplete-model
+	url = https://github.com/jennjwang/autocomplete-model.git
