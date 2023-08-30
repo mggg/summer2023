@@ -1,0 +1,6 @@
+setup.py
+adaptivecover_kmapper.egg-info/PKG-INFO
+adaptivecover_kmapper.egg-info/SOURCES.txt
+adaptivecover_kmapper.egg-info/dependency_links.txt
+adaptivecover_kmapper.egg-info/requires.txt
+adaptivecover_kmapper.egg-info/top_level.txt

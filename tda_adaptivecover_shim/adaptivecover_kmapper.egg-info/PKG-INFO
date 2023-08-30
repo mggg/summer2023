@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: adaptivecover-kmapper
+Version: 0.1.0
+Summary: A small shim to use adaptive cover with Kepler Mapper
+Author: Hazel Brenner
+Author-email: hnb29@cornell.edu
+License: BSD 2-clause

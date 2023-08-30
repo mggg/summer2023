@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: sklearn-pyclustering-shim
+Version: 0.1.0
+Summary: A small shim to use the PyClustering XMeans implementation with Sklearn API
+Author: Hazel Brenner
+Author-email: hnb29@cornell.edu
+License: BSD 2-clause

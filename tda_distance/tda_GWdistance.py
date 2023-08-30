@@ -11,12 +11,13 @@ import matplotlib
 import matplotlib as mpl
 import itertools
 import traceback
+from sklearn.preprocessing import MinMaxScaler
 
 #load in data
-folder_path = "/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2019_runoff_vers2/data/elimination_19_ro_2"
+folder_path = "/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2015_first_round/data/elimination_15_fr"
 def loadin(path):
     json_files = [file for file in os.listdir(folder_path) if file.endswith(".json")]
-    result = json_files.sort()
+    result = json_files.sort(key=lambda x: int(''.join(filter(str.isdigit, x))))
     graphs = []
     for file in json_files:
         file_path = os.path.join(folder_path, file)
@@ -116,42 +117,45 @@ def pairwise_comparision(graphs_1, graphs_2):
 
 resultss = pairwise_comparision(G1, G1)
 
-def generate_heatmap_plot(resultss, graphs, cmap='hot', interpolation='nearest', label='Data Values'):
+def generate_heatmap_plot(resultss, graphs, cmap='hot', interpolation='nearest', colorbar_label='badjn'):
+    
+    phrases_to_remove = [ "_", ".json","chicago"] + [str(i) for i in range (21)]
     names_1 = []
-
-    phrases_to_remove = ["_", ".json","chicago"]
     for i in graphs:
         modified_name = i.graph["name"]
         for phrase in phrases_to_remove:
             modified_name = modified_name.replace(phrase, "")
         names_1.append(modified_name)
-    
-    fig, ax = plt.subplots()  
-    # Show all ticks and label them with the respective list entries
+        
+    fig, ax = plt.subplots(figsize=(10, 8)) 
+
     ax.set_xticks(np.arange(len(resultss)), labels=names_1)
     ax.set_yticks(np.arange(len(resultss)), labels=names_1)
-    # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=60, ha="right",
-             rotation_mode="anchor")
     
-    for label in ax.get_xticklabels():
-        label.set_fontsize(9) 
+    plt.setp(ax.get_xticklabels(), rotation=60, ha="right", rotation_mode="anchor")
+    
+    [label.set_fontsize(9) for label in ax.get_xticklabels()]
 
-    heatmap = ax.imshow(resultss, cmap=cmap, interpolation=interpolation) 
+    scaler = MinMaxScaler()
 
-   # for i in range(len(resultss)):
-    #     for j in range(len(resultss[i])):
-     #          ax.text(j, i, f"{resultss[i, j]:.0002f}", ha="center", va="center", color="green", fontsize=3)
+    normalized_resultss = scaler.fit_transform(resultss)
+
+    heatmap = ax.imshow(normalized_resultss, cmap=cmap, interpolation=interpolation)  
+
+    for i in range(len(resultss)):
+        for j in range(len(resultss[i])):
+            if i != j:
+                ax.text(j, i, f"{normalized_resultss[i, j]:.00002f}", ha="center", va="center", color="blue", fontsize=6)
 
     colorbar = plt.colorbar(heatmap)
-    colorbar.set_label(label)
-
-    colorbar = plt.colorbar(heatmap)
-    colorbar.set_label('')
-    ax.set_title("2019 run off (Version 2)")
-    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2019_runoff_vers2/heatmap/2019_runoff_vers2.png')
+    colorbar.set_label(colorbar_label)
+    ax.set_title("2015 first round")
+    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2015_first_round/heatmap/betterer?.png')
     plt.show()
     return fig
 
-viz= generate_heatmap_plot(resultss=resultss, graphs = G1, cmap='hot', interpolation='nearest', label='Data Values')
-print(viz)
+viz= generate_heatmap_plot(resultss=resultss, graphs = G1, cmap='hot', interpolation='nearest', colorbar_label='try')
+
+
+
+
