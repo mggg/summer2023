@@ -12,9 +12,10 @@ import matplotlib as mpl
 import itertools
 import traceback
 from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
 
 #load in data
-folder_path = "/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2015_first_round/data/elimination_15_fr"
+folder_path = "/Users/emariedelanuez/summer2023/tda_distance/one_by_one_elim/data_for_one_by_one/one_elimination_15_ro"
 def loadin(path):
     json_files = [file for file in os.listdir(folder_path) if file.endswith(".json")]
     result = json_files.sort(key=lambda x: int(''.join(filter(str.isdigit, x))))
@@ -66,7 +67,6 @@ def decorate_edges(G):
     edges = G.edges()
     for edge in edges:
         weight =  abs(G.nodes[edge[0]]["mean_filter_val"] - G.nodes[edge[1]]["mean_filter_val"])
-        
         if weight == 0:
             weight = np.finfo(np.float64).eps # force positive-definite
         G.edges[edge]["weight"] = weight
@@ -83,7 +83,26 @@ def distance_matrix(G):
             dist_matrix[source_index, target_index] = length
 
     dist_matrix[dist_matrix == -np.inf] = dist_matrix.max()
+    has_negative_values = np.any(dist_matrix < 0)
+
+    # Check for zeros
+    has_zeros = np.any(dist_matrix == 0)
+
+    if has_negative_values:
+        print("dist_matrix has negative values.")
+    else:
+        print("dist_matrix does not have negative values.")
+
+    if has_zeros:
+        print("dist_matrix has zeros.")
+    else:
+        print("dist_matrix does not have zeros.")
+    
+    #there are zeros somewhere
+
+
     G.graph["dist_matrix"] = dist_matrix
+
     return G
 
 def decorate_graph(G):
@@ -93,29 +112,48 @@ def decorate_graph(G):
     G = distance_matrix(G)
     return G
 
-def gw_dist(G1, G2):
 
+
+def gw_dist(G1, G2):
     dist = ot.gromov.gromov_wasserstein2(G1.graph["dist_matrix"],G2.graph ["dist_matrix"],
                                          list(dict(G1.nodes(data="weight")).values()),
                                          list(dict(G2.nodes(data="weight")).values())
                                          )
+    
     return dist
-
 
 def pairwise_comparision(graphs_1, graphs_2):
     decorated_graphs1 = [decorate_graph(graph) for graph in graphs_1]
     decorated_graphs2 = [decorate_graph(graph) for graph in graphs_2]
-
     results = np.empty((len(graphs_1), len(graphs_2))) 
     for i, decorated_G1 in tqdm(enumerate(decorated_graphs1), desc = "Pairwise distances outer loop"): 
         for j, decorated_G2 in tqdm(enumerate(decorated_graphs2), desc = "Pairwise distances inner loop", leave=False):
             result = gw_dist(decorated_G1, decorated_G2)
-            results[i, j] = result  
-
+            result = np.sqrt(result)/2
+            results[i, j] = result
+    
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    scaler = MinMaxScaler()
+    normalized_results = scaler.fit_transform(results)
+    results_df = pd.DataFrame(normalized_results)
+    pd.reset_option('display.max_rows')
+    pd.reset_option('display.max_columns')
+    #print(results_df)  ### note to self there is some weird nan values coming up when i do the square root divided by two stuff. there are no NAN values when i don't do it with the square root. why are those nan values coming up?
     return results
  
+resultss= pairwise_comparision(G1, G1)
 
-resultss = pairwise_comparision(G1, G1)
+
+
+#try different distances to see if its specific to this function -- to see if you get symmetry 
+# sometimes when peopole use distanced they mean similary which is not the same 
+#what matrix did i use 
+#cite the papers 
+#i implemented it in this language 
+#how many nodes
+#explain the heatmap 
+
 
 def generate_heatmap_plot(resultss, graphs, cmap='hot', interpolation='nearest', colorbar_label='badjn'):
     
@@ -149,13 +187,12 @@ def generate_heatmap_plot(resultss, graphs, cmap='hot', interpolation='nearest',
 
     colorbar = plt.colorbar(heatmap)
     colorbar.set_label(colorbar_label)
-    ax.set_title("2015 first round")
-    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/feature_selection/2015_first_round/heatmap/betterer?.png')
+    ax.set_title("odeeeee")
+    plt.savefig('/Users/emariedelanuez/summer2023/tda_distance/one_by_one_elim/heatmaps_for_one_by_one/tryme.png')
     plt.show()
     return fig
 
 viz= generate_heatmap_plot(resultss=resultss, graphs = G1, cmap='hot', interpolation='nearest', colorbar_label='try')
-
 
 
 

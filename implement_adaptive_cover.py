@@ -33,8 +33,6 @@ initial_cover = Cover(num_intervals=num_intervals,percent_overlap=perc_overlap)
 amount_initial_centers=2
 
 
-
-
 ################pipeline
 
 def load_in(data_path, columns_to_delete, projection_variables_to_keep, temporary_list_of_columns_to_delete):
@@ -111,7 +109,7 @@ def mapper_pipeline(projection_options= projection_options, processed_results=pr
         input_data_dictionary = input_data(input_df_dictionary= input_df_dictionary)
         projection_index_dictionary = projection_index(input_df_dictionary=input_df_dictionary, selected_projection=projection)
         input_data_proj = input_data_projection(input_data_dictionary= input_data_dictionary, input_df_dictionary=input_df_dictionary, projection_index_dictionary= projection_index_dictionary)
-        mapper_graph(input_df_dictionary= input_df_dictionary, input_data_dictionary=input_data_dictionary, input_data_proj= input_data_proj, projection_index_dictionary=projection_index_dictionary, column_names=column_names, initial_cover=initial_cover, amount_initial_centers=amount_initial_centers, data_path=data_path)
+        mapper_graph(input_df_dictionary= input_df_dictionary, input_data_dictionary=input_data_dictionary, input_data_proj= input_data_proj, projection_index_dictionary=projection_index_dictionary, column_names=column_names, initial_cover=initial_cover, amount_initial_centers=amount_initial_centers, data_path=data_path, #notechangeselected_projection = projection)
 
     return 
 
@@ -245,7 +243,7 @@ def input_data_projection(input_data_dictionary, input_df_dictionary, projection
     return input_data_proj
 
 
-def mapper_graph(input_df_dictionary, input_data_dictionary, input_data_proj, projection_index_dictionary, column_names, initial_cover, amount_initial_centers, data_path):
+def mapper_graph(input_df_dictionary, input_data_dictionary, input_data_proj, projection_index_dictionary, column_names, initial_cover, amount_initial_centers, data_path,#notechange selected_projection):
     """
         Creates a directory structure named after the selected projection variable in the user's output folder.
         Inside this directory, an ensemble of pairs of .html and .json files is generated, where each pair is associated/named after 
@@ -264,7 +262,7 @@ def mapper_graph(input_df_dictionary, input_data_dictionary, input_data_proj, pr
         Returns:
             None
     """
-    base_directory = "/Users/emariedelanuez/summer2023/outputs/"
+    base_directory = "/Users/emariedelanuez/summer2023/outputs"
     output_directory = os.path.join(base_directory, f"one_elimination_{selected_projection}/")
     os.makedirs(output_directory, exist_ok=True)
     for key in input_df_dictionary.keys():
